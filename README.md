@@ -2,6 +2,7 @@
 * Drag-n-drop:a in svg-filerna
 * Lyft ut CSS:n och lägg det i en extern SASS-fil
 * Skapa ett bygg-skript med Grunt (livereload och andra fina grejer)
+* Använd Require.js för att dela upp koden i moduler och splitta koden till olika filer
 * Ska inte behöva köra en server lokalt, hur löser man det bäst?
 * Fixa så att det fungerar i Chrome
 * slide-in/slide-out borde finnas med
