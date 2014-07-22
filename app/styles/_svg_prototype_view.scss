@@ -1,0 +1,44 @@
+svg [data-states~="hover"],
+svg [data-states~="press"],
+svg :hover > [data-states~="default"],
+svg :active > [data-states~="default"],
+svg [data-visible="false"] {
+    /* Bara opacitet */
+    opacity: 0;
+}
+svg :hover > [data-states~="hover"],
+svg :active > [data-states~="press"] {
+    /* Bara opacitet */
+    opacity: 1;
+}
+svg [data-toggled-on="true"] > [data-states~="toggled-off"],
+svg [data-states~="toggled-on"],
+svg [data-display="false"] {
+    /* opacitet + pointer-events */
+/*             display: none; */
+    opacity: 0;
+    pointer-events: none;
+}
+svg [data-states~="toggled-off"],
+svg [data-toggled-on="true"] > [data-states~="toggled-on"] {
+    /* opacitet + pointer-events */
+/*             display: inline; */
+    opacity: 1;
+    pointer-events: auto;
+}
+svg [data-events],
+svg [data-arg-link] {
+    cursor: pointer;
+}
+svg {
+    width: 100%;
+    pointer-events: none; /* för click-through */
+}
+svg > * {
+    pointer-events: auto;
+}
+svg#fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+}

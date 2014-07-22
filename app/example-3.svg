@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Fixed" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="792px" height="612px"
+	 viewBox="0 0 792 612" enable-background="new 0 0 792 612" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  width="1397.92" height="977.887" x="-0.5" y="-365.387" bottomLeftOrigin="true"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<rect x="50" y="44" fill="none" width="206" height="39"/>
+<text transform="matrix(1 0 0 1 50 71.2158)" font-family="'Avenir-Black'" font-size="36">EXAMPLES</text>
+<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="50" y1="98" x2="734" y2="98"/>
+<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="50" y1="156.333" x2="734" y2="156.333"/>
+<g id="Link:example-3.svg">
+	<rect x="480.5" y="149" fill="#808080" width="57" height="3.667"/>
+	<rect x="470" y="122" fill="none" width="80" height="19.5"/>
+	<text transform="matrix(1 0 0 1 480.3301 131.0723)" font-family="'Avenir-Black'" font-size="12">Example 3</text>
+	<rect id="_x23_hover" x="480.5" y="149" fill="#782BBF" width="57" height="7.333"/>
+	<rect x="469" y="98" fill-opacity="0" width="80" height="58.334"/>
+</g>
+<g id="Link:example-2.svg">
+	<rect x="352" y="122" fill="none" width="80" height="19.5"/>
+	<text transform="matrix(1 0 0 1 362.3301 131.0723)" font-family="'Avenir-Black'" font-size="12">Example 2</text>
+	<rect id="_x23_hover_1_" x="362.5" y="149" fill="#782BBF" width="57" height="7.333"/>
+	<rect x="351" y="98" fill-opacity="0" width="80" height="58.334"/>
+</g>
+<g id="Link:example-1.svg_1_">
+	<rect x="234" y="98" fill-opacity="0" width="80" height="58.333"/>
+	<rect x="234" y="122" fill="none" width="80" height="19.5"/>
+	<text transform="matrix(1 0 0 1 244.3306 131.0723)" font-family="'Avenir-Black'" font-size="12">Example 1</text>
+	<rect id="_x23_hover_2_" x="244.5" y="149" fill="#782BBF" width="57" height="7.333"/>
+</g>
+<g id="Layer_6">
+	<g id="_x40_click_2_">
+		
+			<image overflow="visible" enable-background="new    " width="980" height="753" xlink:href="example-image.jpeg"  transform="matrix(0.1833 0 0 0.1833 76.3955 269.9971)">
+		</image>
+		<g id="_x23_hover_Fade:300">
+			<circle fill="none" stroke="#FFFFFF" stroke-width="7" stroke-miterlimit="10" cx="160.507" cy="332.541" r="14.872"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="7" stroke-miterlimit="10" x1="171.022" y1="343.057" x2="189.316" y2="361.35"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" x1="160.509" y1="324.575" x2="160.509" y2="340.506"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" x1="152.541" y1="332.541" x2="168.472" y2="332.541"/>
+		</g>
+	</g>
+	<g id="_x40_click_1_">
+		
+			<image overflow="visible" enable-background="new    " width="980" height="753" xlink:href="example-image.jpeg"  transform="matrix(0.1833 0 0 0.1833 301.1963 269.9971)">
+		</image>
+		<g id="_x23_hover_Fade:300_4_">
+			<circle fill="none" stroke="#FFFFFF" stroke-width="7" stroke-miterlimit="10" cx="385.307" cy="332.541" r="14.872"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="7" stroke-miterlimit="10" x1="395.823" y1="343.057" x2="414.117" y2="361.35"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" x1="385.31" y1="324.575" x2="385.31" y2="340.506"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" x1="377.342" y1="332.541" x2="393.272" y2="332.541"/>
+		</g>
+	</g>
+	<g id="_x40_click">
+		
+			<image overflow="visible" enable-background="new    " width="980" height="753" xlink:href="example-image.jpeg"  transform="matrix(0.1833 0 0 0.1833 527.1963 269.9971)">
+		</image>
+		<g id="_x23_hover_Fade:300_2_">
+			<circle fill="none" stroke="#FFFFFF" stroke-width="7" stroke-miterlimit="10" cx="611.307" cy="332.541" r="14.872"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="7" stroke-miterlimit="10" x1="621.823" y1="343.057" x2="640.117" y2="361.35"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" x1="611.311" y1="324.575" x2="611.311" y2="340.506"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" x1="603.342" y1="332.541" x2="619.271" y2="332.541"/>
+		</g>
+	</g>
+	<rect x="699" y="203" fill="none" width="71" height="90"/>
+	<rect id="_x23_toggled-on__x40_click_Fade:600" fill="#FFFFFF" fill-opacity="0.8" width="1397.92" height="977.887"/>
+	<g id="_x23_toggled-on_Fade:300">
+		
+			<image overflow="visible" enable-background="new    " width="980" height="753" xlink:href="example-image.jpeg"  transform="matrix(0.5201 0 0 0.5201 138.9629 121.8438)">
+		</image>
+		<rect x="138.96" y="513.498" fill="none" width="509.728" height="48.502"/>
+		<text transform="matrix(1 0 0 1 138.96 541.5703)" font-family="'Georgia'" font-size="12">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea com</text>
+		<text transform="matrix(1 0 0 1 631.9746 541.5703)" font-family="'Georgia'" font-size="12">-</text>
+		<text transform="matrix(1 0 0 1 138.96 560.5703)" font-family="'Georgia'" font-size="12">modo consequat.</text>
+	</g>
+</g>
+</svg>
