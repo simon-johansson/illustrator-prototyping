@@ -14,6 +14,7 @@ define([
 
         el: $('.app-container'),
 
+        // Kan vi använda backbone-events på något sätt? Blir svårt med selectorerna, eller?
         events: {},
 
         initialize: function (args) {
@@ -24,18 +25,23 @@ define([
         },
 
         initSnap: function(svgData) {
-            console.log(arguments);
-
             var paper = Snap('#scroll');
             paper.append(svgData);
 
+            // Ingen snygg lösning, kom på något bättre
+            $('body').css({
+                height: '2000px',
+                overflow: "scroll"
+            });
+
             paper.select('svg').attr({
-                // Gör dessa värden dynamiska
+                // Gör dessa värden dynamiska?
                 viewBox: '0 0 1000 10000',
                 height: 10000,
                 width: 1000
             });
 
+            // Flytta ut vissa av dessa funktioner till separata moduler
             this.cleanIds(paper);
             this.initDisplay(paper);
             this.parseAllInstructions(paper);
@@ -92,10 +98,11 @@ define([
             // sätt data-toggled-on till bool, eller toggla
             var newValue = bool;
             if (bool === undefined) {
-                var toggle = isToggledOn(snapElement);
+                var toggle = this.isToggledOn(snapElement);
                 newValue = !toggle;
             }
             snapElement.attr('data-toggled-on', newValue.toString());
+            console.log(snapElement.attr('data-toggled-on'));
         },
 
         isToggledOn: function (snapElement) {
@@ -131,50 +138,53 @@ define([
         attachEvents: function (paper) {
             // TODO: förbered för mer än bara standardevent
             // dvs t ex @click:me#toggle-on
+            var self = this;
             paper.selectAll('[data-events]').forEach(function(el) {
                 var eventNames = el.attr('data-events').split(' ');
-                _(eventNames).each(function(eventName) {
+                eventNames.forEach(function(eventName) {
+                    console.log(eventName);
                     var parent = Snap(el).parent();
                     switch (eventName) {
                         case 'click':
                             parent.attr('data-interactive', 'true');
                             el.click(function(e) {
-                                toggleOnOff(parent);
+                                console.log("Clicked!");
+                                self.toggleOnOff(parent);
                             });
                           break;
                         case 'hover':
                             parent.attr('data-interactive', 'true');
                             el.mouseover(function(e) {
-                                if (isToggledOn(parent)) {
+                                if (self.isToggledOn(parent)) {
                                     // kom ihåg om det redan var påtogglat.
                                     parent.attr('data-pre-toggle', 'true');
                                 } else {
-                                    toggleOnOff(parent, true);
+                                    self.toggleOnOff(parent, true);
                                 }
                             });
                             el.mouseout(function(e) {
                                 if (parent.attr('data-pre-toggle') === 'true') {
                                     parent.attr('data-pre-toggle', 'false');
                                 } else {
-                                    toggleOnOff(parent, false);
+                                    self.toggleOnOff(parent, false);
                                 }
                             });
                           break;
                         case 'press':
                             parent.attr('data-interactive', 'true');
                             el.mousedown(function(e) {
-                                if (isToggledOn(parent)) {
+                                if (self.isToggledOn(parent)) {
                                     // kom ihåg om det redan var påtogglat.
                                     parent.attr('data-pre-toggle', 'true');
                                 } else {
-                                    toggleOnOff(parent, true);
+                                    self.toggleOnOff(parent, true);
                                 }
                             });
                             Snap.select('body').mouseup(function(e) {
                                 if (parent.attr('data-pre-toggle') === 'true') {
                                     parent.attr('data-pre-toggle', 'false');
                                 } else {
-                                    toggleOnOff(parent, false);
+                                    self.toggleOnOff(parent, false);
                                 }
                             });
                           break;
@@ -187,9 +197,9 @@ define([
             paper.selectAll('[data-arg-link]').forEach(function(el) {
                 var targetDestination = el.attr('data-arg-link');
 
-                // el.click(function(e) {
-                //     window.location.search = targetDestination;
-                // });
+                el.click(function(e) {
+                    app.router.navigate("/" + targetDestination, true);
+                });
             });
         },
 
@@ -204,6 +214,7 @@ define([
         },
 
         parseInstruction: function (string, el) {
+            // console.log(arguments);
             var stateMatch = (string).match(/^#([a-z0-9-]+)/i);
             var eventMatch = (string).match(/^@([a-z0-9-]+)/i);
             var numberMatch = (string).match(/^([a-z]*):([0-9]+)$/i);
@@ -211,29 +222,25 @@ define([
 
             if (stateMatch !== null) {
                 var stateName = stateMatch[1];
-
                 var dataStates = el.attr('data-states');
-
-                if (typeof dataStates === 'string') {
+                if (dataStates) {
                     dataStates += ' ' + stateName;
-                } else if (dataStates === undefined) {
+                } else {
                     dataStates = stateName;
                 }
-
                 el.attr('data-states', dataStates);
+
             } else if (eventMatch !== null) {
                 // TODO: konvertera "#toggled" till "#toggled-on" eller "#toggled-off"
                 var eventName = eventMatch[1];
-
                 var dataEvents = el.attr('data-events');
-
-                if (typeof dataEvents === 'string') {
+                if (dataEvents) {
                     dataEvents += ' ' + eventName;
-                } else if (dataEvents === undefined) {
+                } else {
                     dataEvents = eventName;
                 }
-
                 el.attr('data-events', dataEvents);
+
             } else if (numberMatch !== null) {
                 var label = numberMatch[1].toLowerCase();
                 var duration = numberMatch[2];
@@ -281,6 +288,7 @@ define([
             return cleanId;
         },
 
+        /* ---------- Work in progress ---------- */
         morphShape: function (el, targetEl, duration) {
             // morpha mellan två path, rect eller polygons
 
@@ -307,6 +315,7 @@ define([
             }
         },
 
+        /* ---------- Work in progress ---------- */
         animatePoints: function (poly, targetPoly, duration) {
             var startPoints = poly.attr('points');
             var targetPoints = targetPoly.attr('points');
