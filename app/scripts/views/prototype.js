@@ -5,8 +5,11 @@ define([
     'underscore',
     'backbone',
     'templates',
-    'snap'
-], function ($, _, Backbone, JST) {
+    'snap',
+    'cleanSVG',
+    'parseSVG',
+    'attachEvents'
+], function ($, _, Backbone, JST, Snap, cleanSVG, parseSVG, attachEvents) {
     'use strict';
 
     var PrototypeView = Backbone.View.extend({
@@ -21,10 +24,10 @@ define([
             this.render();
 
             var fileName = args.fileName;
-            Snap.load(fileName, this.initSnap.bind(this));
+            Snap.load(fileName, this.onLoad.bind(this));
         },
 
-        initSnap: function(svgData) {
+        onLoad: function(svgData) {
             var paper = Snap('#scroll');
             paper.append(svgData);
 
@@ -41,13 +44,11 @@ define([
                 width: 1000
             });
 
+            cleanSVG(paper);
+            parseSVG(paper);
+            attachEvents(paper);
+
             // Flytta ut vissa av dessa funktioner till separata moduler
-            this.cleanIds(paper);
-            this.initDisplay(paper);
-            this.parseAllInstructions(paper);
-            this.addCSSTransitions(paper);
-            this.attachEvents(paper);
-            this.addLinks(paper);
             this.fixClickability(paper);
 
             var scrollLayers = this.divideScrollLayers(paper);
@@ -70,222 +71,6 @@ define([
                 fixed: paper.selectAll('[data-clean-id~="Fixed"]'),
                 scroll: paper.selectAll('[data-clean-id~="Scroll"]')
             }
-        },
-
-        initDisplay: function (paper) {
-            // Illustrator exporterar bara display-attribut när de skiljer sig från sin närmaste parent.
-
-            // loopa ihop en selectorkedja av varannan [display="inline"] resp [display="none"].
-            // sätt data-display på alla children till motsv värde.
-            var selectorChain = '';
-            var maxSelectorDepth = 20; // TODO: Gör om till while-loop och fortsätt bara så länge något väljs.
-            for (var i = 0; i < maxSelectorDepth; i++) {
-                var selector = selectorChain ? selectorChain + ', ' + selectorChain + ' *' : '*';
-                var selection = paper.selectAll(selector);
-                selection.forEach(function(el) {
-                    el.attr('data-display', (i % 2) ? 'false' : 'true');
-                });
-                selectorChain += (i % 2) ? ' [display="inline"]' : ' [display="none"]';
-            }
-
-            // Ta bort alla ursprungliga display-attribut
-            paper.selectAll('*').forEach(function(el) {
-                el.node.removeAttribute('display');
-            });
-        },
-
-        toggleOnOff: function (snapElement, bool) {
-            // sätt data-toggled-on till bool, eller toggla
-            var newValue = bool;
-            if (bool === undefined) {
-                var toggle = this.isToggledOn(snapElement);
-                newValue = !toggle;
-            }
-            snapElement.attr('data-toggled-on', newValue.toString());
-            console.log(snapElement.attr('data-toggled-on'));
-        },
-
-        isToggledOn: function (snapElement) {
-            var dataToggle = snapElement.attr('data-toggled-on');
-            return (dataToggle === 'true');
-        },
-
-        toggleVisibility: function (snapElement, bool) {
-            // sätt data-visible till bool, eller toggla data-visible
-            var newValue = bool;
-            if (bool === undefined) {
-                var visible = isVisible(snapElement);
-                newValue = !visible;
-            }
-            snapElement.attr('data-visible', newValue.toString());
-        },
-
-        isVisible: function (snapElement) {
-            var dataVisible = snapElement.attr('data-visible');
-            return (dataVisible === 'true' || dataVisible === undefined);
-        },
-
-        addCSSTransitions: function (paper) {
-            paper.selectAll('[data-number-fade]').forEach(function(el) {
-                var fadeTime = el.attr('data-number-fade');
-                fadeTime = parseInt(fadeTime);
-
-                // TODO: se till att hantera tidigare style-attribut.
-                el.attr('style', '-webkit-transition: opacity ' + fadeTime + 'ms;');
-            });
-        },
-
-        attachEvents: function (paper) {
-            // TODO: förbered för mer än bara standardevent
-            // dvs t ex @click:me#toggle-on
-            var self = this;
-            paper.selectAll('[data-events]').forEach(function(el) {
-                var eventNames = el.attr('data-events').split(' ');
-                eventNames.forEach(function(eventName) {
-                    console.log(eventName);
-                    var parent = Snap(el).parent();
-                    switch (eventName) {
-                        case 'click':
-                            parent.attr('data-interactive', 'true');
-                            el.click(function(e) {
-                                console.log("Clicked!");
-                                self.toggleOnOff(parent);
-                            });
-                          break;
-                        case 'hover':
-                            parent.attr('data-interactive', 'true');
-                            el.mouseover(function(e) {
-                                if (self.isToggledOn(parent)) {
-                                    // kom ihåg om det redan var påtogglat.
-                                    parent.attr('data-pre-toggle', 'true');
-                                } else {
-                                    self.toggleOnOff(parent, true);
-                                }
-                            });
-                            el.mouseout(function(e) {
-                                if (parent.attr('data-pre-toggle') === 'true') {
-                                    parent.attr('data-pre-toggle', 'false');
-                                } else {
-                                    self.toggleOnOff(parent, false);
-                                }
-                            });
-                          break;
-                        case 'press':
-                            parent.attr('data-interactive', 'true');
-                            el.mousedown(function(e) {
-                                if (self.isToggledOn(parent)) {
-                                    // kom ihåg om det redan var påtogglat.
-                                    parent.attr('data-pre-toggle', 'true');
-                                } else {
-                                    self.toggleOnOff(parent, true);
-                                }
-                            });
-                            Snap.select('body').mouseup(function(e) {
-                                if (parent.attr('data-pre-toggle') === 'true') {
-                                    parent.attr('data-pre-toggle', 'false');
-                                } else {
-                                    self.toggleOnOff(parent, false);
-                                }
-                            });
-                          break;
-                    }
-                });
-            });
-        },
-
-        addLinks: function (paper) {
-            paper.selectAll('[data-arg-link]').forEach(function(el) {
-                var targetDestination = el.attr('data-arg-link');
-
-                el.click(function(e) {
-                    app.router.navigate("/" + targetDestination, true);
-                });
-            });
-        },
-
-        parseAllInstructions: function (paper) {
-            var self = this;
-            paper.selectAll('[data-clean-id]').forEach(function(el) {
-                var id = el.attr('data-clean-id');
-                id.split(' ').forEach(function(substring) {
-                    self.parseInstruction(substring, el);
-                });
-            });
-        },
-
-        parseInstruction: function (string, el) {
-            // console.log(arguments);
-            var stateMatch = (string).match(/^#([a-z0-9-]+)/i);
-            var eventMatch = (string).match(/^@([a-z0-9-]+)/i);
-            var numberMatch = (string).match(/^([a-z]*):([0-9]+)$/i);
-            var argumentMatch = (string).match(/^([a-z]*):(\S+)$/i);
-
-            if (stateMatch !== null) {
-                var stateName = stateMatch[1];
-                var dataStates = el.attr('data-states');
-                if (dataStates) {
-                    dataStates += ' ' + stateName;
-                } else {
-                    dataStates = stateName;
-                }
-                el.attr('data-states', dataStates);
-
-            } else if (eventMatch !== null) {
-                // TODO: konvertera "#toggled" till "#toggled-on" eller "#toggled-off"
-                var eventName = eventMatch[1];
-                var dataEvents = el.attr('data-events');
-                if (dataEvents) {
-                    dataEvents += ' ' + eventName;
-                } else {
-                    dataEvents = eventName;
-                }
-                el.attr('data-events', dataEvents);
-
-            } else if (numberMatch !== null) {
-                var label = numberMatch[1].toLowerCase();
-                var duration = numberMatch[2];
-                el.attr('data-number-' + label, duration);
-            } else if (argumentMatch !== null) {
-                var label = argumentMatch[1].toLowerCase();
-                var duration = argumentMatch[2];
-                el.attr('data-arg-' + label, duration);
-            }
-        },
-
-        cleanIds: function (paper) {
-            var self = this;
-            paper.selectAll('*').forEach(function(el) {
-                var id = el.attr('id');
-
-                if (id && typeof id !== "undefined" && id !== 'adobe_illustrator_pgf') {
-                    id = self.cleanIllustratorId(id);
-                    el.attr('data-clean-id', id);
-                }
-            });
-
-            return paper;
-        },
-
-        cleanIllustratorId: function (id) {
-            // Illustrator gör om lager-/objekt-namn till id:n med specialtecken i hexadecimal form.
-            // Funktionen konverterar till vanliga tecken så det blir lättare att jobba med strängarna
-
-            var charCodeRegex = /_x([\da-f]{2,4})_/ig; // fångar hexadecimala tal omgivna av _x och _
-
-            var cleanId = id.replace(
-                charCodeRegex,
-                function(match, capture) {
-                    // byt ut matchade hextal mot motsvarande utf-tecken
-                    return String.fromCharCode(
-                        parseInt(capture, 16)
-                    );
-                }
-            );
-
-            // ersätt kvarvarande '_' med ' '
-            cleanId = cleanId.replace(/_/g, ' ');
-
-            return cleanId;
         },
 
         /* ---------- Work in progress ---------- */
