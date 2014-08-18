@@ -55,7 +55,8 @@ define([
         BaseEvent.call(this, el); // call super constructor.
         this.el
             .mouseover(function(e) {
-                if (this.isToggledOn) {
+                console.log('mouseover');
+                if (this.isToggledOn()) {
                     // kom ihåg om det redan var påtogglat.
                     this.parentEl.attr('data-pre-toggle', 'true');
                 } else {
@@ -63,6 +64,7 @@ define([
                 }
             }, this)
             .mouseout(function(e) {
+                console.log('mouseout');
                 if (this.parentEl.attr('data-pre-toggle') === 'true') {
                     this.parentEl.attr('data-pre-toggle', 'false');
                 } else {
@@ -79,18 +81,21 @@ define([
         BaseEvent.call(this, el); // call super constructor.
 
         this.el.mousedown(function(e) {
-            if (isToggledOn(this.parentEl)) {
+            if (this.isToggledOn()) {
                 // kom ihåg om det redan var påtogglat.
                 this.parentEl.attr('data-pre-toggle', 'true');
             } else {
                 this.toggleOnOff(true);
             }
         }, this);
+        
+        var self = this;
+        
         Snap.select('body').mouseup(function(e) {
-            if (this.parentEl.attr('data-pre-toggle') === 'true') {
-                this.parentEl.attr('data-pre-toggle', 'false');
+            if (self.parentEl.attr('data-pre-toggle') === 'true') {
+                self.parentEl.attr('data-pre-toggle', 'false');
             } else {
-                this.toggleOnOff(false);
+                self.toggleOnOff(false);
             }
         });
     }
