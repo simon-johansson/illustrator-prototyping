@@ -1,8 +1,10 @@
 'use strict';
 var LIVERELOAD_PORT = 35729;
 var SERVER_PORT = 9000;
-var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
-var mountFolder = function (connect, dir) {
+var lrSnippet = require('connect-livereload')({
+    port: LIVERELOAD_PORT
+});
+var mountFolder = function(connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
 
@@ -13,7 +15,7 @@ var mountFolder = function (connect, dir) {
 // 'test/spec/**/*.js'
 // templateFramework: 'lodash'
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     // show elapsed time at the end
     require('time-grunt')(grunt);
     // load all grunt tasks
@@ -32,10 +34,14 @@ module.exports = function (grunt) {
                 nospawn: true,
                 livereload: true
             },
-            compass: {
+            sass: {
                 files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass']
+                tasks: ['sass']
             },
+            // compass: {
+            //     files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+            //     tasks: ['compass']
+            // },
             livereload: {
                 options: {
                     livereload: grunt.option('livereloadport') || LIVERELOAD_PORT
@@ -68,7 +74,7 @@ module.exports = function (grunt) {
             },
             livereload: {
                 options: {
-                    middleware: function (connect) {
+                    middleware: function(connect) {
                         return [
                             lrSnippet,
                             mountFolder(connect, '.tmp'),
@@ -80,7 +86,7 @@ module.exports = function (grunt) {
             test: {
                 options: {
                     port: 9001,
-                    middleware: function (connect) {
+                    middleware: function(connect) {
                         return [
                             lrSnippet,
                             mountFolder(connect, '.tmp'),
@@ -92,7 +98,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 options: {
-                    middleware: function (connect) {
+                    middleware: function(connect) {
                         return [
                             mountFolder(connect, yeomanConfig.dist)
                         ];
@@ -132,23 +138,38 @@ module.exports = function (grunt) {
                 }
             }
         },
-        compass: {
-            options: {
-                sassDir: '<%= yeoman.app %>/styles',
-                cssDir: '.tmp/styles',
-                imagesDir: '<%= yeoman.app %>/images',
-                javascriptsDir: '<%= yeoman.app %>/scripts',
-                fontsDir: '<%= yeoman.app %>/styles/fonts',
-                importPath: '<%= yeoman.app %>/bower_components',
-                relativeAssets: true
+        sass: {
+            dist: {
+                files: {
+                    '.tmp/styles/main.css': '<%= yeoman.app %>/styles/main.scss'
+                }
             },
-            dist: {},
-            server: {
+            dev: {
                 options: {
-                    debugInfo: true
+                    sourceMap: true
+                },
+                files: {
+                    '.tmp/styles/main.css': '<%= yeoman.app %>/styles/main.scss'
                 }
             }
         },
+        // compass: {
+        //     options: {
+        //         sassDir: '<%= yeoman.app %>/styles',
+        //         cssDir: '.tmp/styles',
+        //         imagesDir: '<%= yeoman.app %>/images',
+        //         javascriptsDir: '<%= yeoman.app %>/scripts',
+        //         fontsDir: '<%= yeoman.app %>/styles/fonts',
+        //         importPath: '<%= yeoman.app %>/bower_components',
+        //         relativeAssets: true
+        //     },
+        //     dist: {},
+        //     server: {
+        //         options: {
+        //             debugInfo: true
+        //         }
+        //     }
+        // },
         requirejs: {
             dist: {
                 // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
@@ -274,16 +295,16 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('createDefaultTemplate', function () {
+    grunt.registerTask('createDefaultTemplate', function() {
         grunt.file.write('.tmp/scripts/templates.js', 'this.JST = this.JST || {};');
     });
 
-    grunt.registerTask('server', function (target) {
+    grunt.registerTask('server', function(target) {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
         grunt.task.run(['serve' + (target ? ':' + target : '')]);
     });
 
-    grunt.registerTask('serve', function (target) {
+    grunt.registerTask('serve', function(target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'open:server', 'connect:dist:keepalive']);
         }
@@ -304,25 +325,27 @@ module.exports = function (grunt) {
             'clean:server',
             'createDefaultTemplate',
             'jst',
-            'compass:server',
+            // 'compass:server',
+            'sass',
             'connect:livereload',
             'open:server',
             'watch'
         ]);
     });
 
-    grunt.registerTask('test', function (isConnected) {
+    grunt.registerTask('test', function(isConnected) {
         isConnected = Boolean(isConnected);
         var testTasks = [
-                'clean:server',
-                'createDefaultTemplate',
-                'jst',
-                'compass',
-                'connect:test',
-                'mocha',
-            ];
+            'clean:server',
+            'createDefaultTemplate',
+            'jst',
+            // 'compass',
+            'sass',
+            'connect:test',
+            'mocha',
+        ];
 
-        if(!isConnected) {
+        if (!isConnected) {
             return grunt.task.run(testTasks);
         } else {
             // already connected so not going to connect again, remove the connect:test task
@@ -335,7 +358,8 @@ module.exports = function (grunt) {
         'clean:dist',
         'createDefaultTemplate',
         'jst',
-        'compass:dist',
+        // 'compass:dist',
+        'sass:dist',
         'useminPrepare',
         'requirejs',
         'imagemin',
