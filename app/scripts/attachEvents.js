@@ -11,10 +11,10 @@ define([
         this.el = el;
         this.parentEl = Snap(el).parent();
 
-        this.isToggledOn = (function(self) {
-            var dataToggle = self.parentEl.attr('data-toggled-on');
+        this.isToggledOn = function() {
+            var dataToggle = this.parentEl.attr('data-toggled-on');
             return (dataToggle === 'true');
-        })(this);
+        };
         this.isVisible = (function(self) {
             var dataVisible = self.parentEl.attr('data-visible');
             return (dataVisible === 'true' || dataVisible === undefined);
@@ -23,14 +23,9 @@ define([
         this.parentEl.attr('data-interactive', 'true');
     }
     BaseEvent.prototype.toggleOnOff = function (bool) {
-        // sätt data-toggled-on till bool, eller toggla
-        var newValue = bool;
-        if (typeof newValue === 'undefined') {
-            this.isToggledOn = !this.isToggledOn;
-        } else {
-            this.isToggledOn = newValue;
-        }
-        this.parentEl.attr('data-toggled-on', this.isToggledOn);
+        var newBool = (bool !== undefined) ? bool : !this.isToggledOn();
+        
+        this.parentEl.attr('data-toggled-on', newBool);
     }
     BaseEvent.prototype.toggleVisibility = function (bool) {
         // sätt data-visible till bool, eller toggla data-visible
